@@ -1,0 +1,9 @@
+# Default ignored files
+.idea
+out/
+*/*.iml
+*.log
+*/*.log
+*/target/
+*/*.gz
+*.gz
