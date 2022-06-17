@@ -1,0 +1,17 @@
+student:
+  test:
+    locale: "ru_RU"
+    question:
+      path: "questions.csv"
+    success:
+      coefficient: 0.6
+    questions:
+      prefix:
+        key: "questions.prefix"
+    answers:
+      limited:
+        header:
+          key: "answers.limited.header"
+      free:
+        header:
+          key: "answers.free.header"
