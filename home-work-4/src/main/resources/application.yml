@@ -1,0 +1,14 @@
+spring:
+  shell:
+    interactive:
+      enabled: false
+  main:
+    allow-circular-references: true
+
+student:
+  test-locale: "en"
+  test-question-path: "questions.csv"
+  test-success-coefficient: 0.6
+  test-questions-prefix-key: "questions.prefix"
+  test-answers-limited-header-key: "answers.limited.header"
+  test-answers-free-header-key: "answers.free.header"
