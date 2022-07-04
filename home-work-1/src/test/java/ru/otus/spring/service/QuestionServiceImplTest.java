@@ -7,7 +7,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import ru.otus.spring.dao.QuestionDao;
+import ru.otus.spring.repository.QuestionDao;
 import ru.otus.spring.domain.Answer;
 import ru.otus.spring.domain.FreeAnswerQuestion;
 import ru.otus.spring.domain.LimitedAnswerQuestion;

@@ -1,14 +1,12 @@
 package ru.otus.spring.service.question;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.otus.spring.dao.QuestionDao;
+import ru.otus.spring.repository.QuestionDao;
 import ru.otus.spring.domain.Answer;
 import ru.otus.spring.domain.FreeAnswerQuestion;
 import ru.otus.spring.domain.LimitedAnswerQuestion;

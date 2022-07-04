@@ -1,4 +1,4 @@
-package ru.otus.spring.dao;
+package ru.otus.spring.repository;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
