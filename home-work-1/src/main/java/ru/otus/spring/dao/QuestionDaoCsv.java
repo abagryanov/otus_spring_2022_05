@@ -1,4 +1,4 @@
-package ru.otus.spring.repository;
+package ru.otus.spring.dao;
 
 import ru.otus.spring.domain.Question;
 import ru.otus.spring.util.DialogUtil;

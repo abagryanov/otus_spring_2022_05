@@ -2,7 +2,7 @@ package ru.otus.spring.service.question;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.spring.repository.QuestionDao;
+import ru.otus.spring.dao.QuestionDao;
 import ru.otus.spring.domain.Question;
 
 import java.util.Set;
