@@ -1,3 +1,3 @@
-insert into book (name, description_id)
-values ('White book', 1),
-       ('Black book', 2)
+insert into book (name)
+values ('White book'),
+       ('Black book')

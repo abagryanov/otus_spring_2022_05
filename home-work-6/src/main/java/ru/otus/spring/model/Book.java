@@ -9,22 +9,24 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@javax.persistence.Entity
+@Entity
 @Table(name = "book")
-@NamedEntityGraph(name = "book-description-entity-graph",
-        attributeNodes = {@NamedAttributeNode("description")})
+@NamedEntityGraph(name = "book-entity-graph",
+        attributeNodes = {@NamedAttributeNode("comments")})
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Book implements Entity {
+public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_id")
     @EqualsAndHashCode.Include
     private long id;
+
     @Column(name = "name")
     private String name;
+
     @Fetch(FetchMode.SELECT)
     @BatchSize(size = 5)
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -32,6 +34,7 @@ public class Book implements Entity {
             joinColumns = {@JoinColumn(name = "book_id")},
             inverseJoinColumns = {@JoinColumn(name = "author_id")})
     private List<Author> authors = new ArrayList<>();
+
     @Fetch(FetchMode.SELECT)
     @BatchSize(size = 5)
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -40,22 +43,29 @@ public class Book implements Entity {
             inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     private List<Genre> genres = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "description_id")
-    private Description description;
+    @Fetch(FetchMode.SELECT)
+    @BatchSize(size = 5)
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
+            orphanRemoval = true)
+    @JoinColumn(name = "book_id")
+    private List<Comment> comments;
 
     public Book(String name,
                 List<Author> authors,
                 List<Genre> genres,
-                Description description) {
+                List<Comment> comments) {
         this.name = name;
         this.authors = authors;
         this.genres = genres;
-        this.description = description;
+        this.comments = comments;
     }
 
-    public Book(String name, Description description) {
+    public Book(String name, List<Comment> comments) {
         this.name = name;
-        this.description = description;
+        this.comments = comments;
+    }
+
+    public Book(String name) {
+        this.name = name;
     }
 }

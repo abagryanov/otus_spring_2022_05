@@ -1,19 +1,8 @@
-create table if not exists description
-(
-    description_id bigserial primary key,
-    description varchar(50) not null
-);
-
 create table if not exists book
 (
     book_id bigserial primary key,
-    description_id bigint,
     name varchar(50) not null
 );
-
-alter table book
-    add constraint FK_BookDescription_DescriptionId
-        foreign key (description_id) references description (description_id) on delete set null;
 
 create table if not exists author
 (
@@ -57,3 +46,14 @@ alter table book_genre
 alter table book_genre
     add constraint FK_BookGenre_GenreId
         foreign key (genre_id) references genre (genre_id) on delete cascade;
+
+create table if not exists comment
+(
+    comment_id bigserial primary key,
+    book_id bigint,
+    comment varchar(50) not null
+);
+
+alter table comment
+    add constraint FK_Comment_BookId
+        foreign key (book_id) references book (book_id) on delete cascade;

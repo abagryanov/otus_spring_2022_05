@@ -7,19 +7,23 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@javax.persistence.Entity
-@Table(name = "description")
+@Entity
+@Table(name = "comment")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Description implements Entity {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "description_id")
+    @Column(name = "comment_id")
     @EqualsAndHashCode.Include
     private long id;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "comment")
+    private String comment;
+
+    public Comment(String comment) {
+        this.comment = comment;
+    }
 }

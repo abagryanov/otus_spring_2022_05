@@ -4,15 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.model.*;
-import ru.otus.spring.repository.AuthorRepository;
-import ru.otus.spring.repository.BookRepository;
-import ru.otus.spring.repository.DescriptionRepository;
-import ru.otus.spring.repository.GenreRepository;
+import ru.otus.spring.service.BookService;
 import ru.otus.spring.service.io.IoService;
 import ru.otus.spring.service.io.IoServiceImpl;
 import ru.otus.spring.validator.UserInputValidator;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -22,96 +20,94 @@ import java.util.stream.IntStream;
 public class BookActionConsoleProcessor implements BookActionProcessor {
     private IoService ioService = new IoServiceImpl(System.in, System.out);
     private final UserInputValidator userInputValidator;
-    private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
-    private final GenreRepository genreRepository;
+    private final BookService bookService;
 
-    private final DescriptionRepository descriptionRepository;
-
-    @Override
     @Transactional
+    @Override
     public void processCreate() {
         String bookName = ioService.readStringWithPrompts("Enter book name:");
-        List<Author> availableAuthors = authorRepository.findAll();
+        List<Author> availableAuthors = bookService.getAuthors();
         ioService.printString("Select authors (comma seperated):");
         String separatedAuthorIndexes = ioService
                 .readStringWithPrompts(formatAuthorsSelectionBody(availableAuthors));
         List<Author> selectedAuthors = getSelectedValues(separatedAuthorIndexes, availableAuthors);
-        List<Genre> availableGenres = genreRepository.findAll();
+        List<Genre> availableGenres = bookService.getGenres();
         ioService.printString("Select genres (comma seperated):");
         String separatedGenreIndexes = ioService
                 .readStringWithPrompts(formatGenresSelectionBody(availableGenres));
         List<Genre> selectedGenres = getSelectedValues(separatedGenreIndexes, availableGenres);
-        List<Description> availableDescriptions = descriptionRepository.findAll();
-        ioService.printString("Select description:");
-        int descriptionIndex = ioService
-                .readIntWithPrompts(formatDescriptionSelectionBody(availableDescriptions));
-        Description selectedDescription = availableDescriptions.get(descriptionIndex);
-        Book book = new Book(bookName, selectedAuthors, selectedGenres, selectedDescription);
-        bookRepository.save(book);
+        String comment = ioService.readStringWithPrompts("Write comment (press enter to skip):");
+        List<Comment> comments = comment.isEmpty() ?
+                Collections.emptyList() :
+                Collections.singletonList(new Comment(comment));
+        Book book = new Book(bookName, selectedAuthors, selectedGenres, comments);
+        bookService.createBook(book);
     }
 
-    @Override
     @Transactional
+    @Override
     public void processUpdate() {
         ioService.printString("Select book number to update:");
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookService.getBooks();
         int bookIndex = ioService.readIntWithPrompts(formatBooksBody(books)) - 1;
         bookIndex = userInputValidator.validateInputIndex(bookIndex, books);
         Book book = books.get(bookIndex);
         String currentName = book.getName();
         List<Author> currentAuthors = book.getAuthors();
         List<Genre> currentGenres = book.getGenres();
-        Description currentDescription = book.getDescription();
+        List<Comment> currentComments = book.getComments();
         String newName = ioService.readStringWithPrompts(
                 String.format("Enter new book name, press enter to use old value: (%s)", currentName));
         newName = newName.isEmpty() ? currentName : newName;
-        List<Author> availableAuthors = authorRepository.findAll();
+        List<Author> availableAuthors = bookService.getAuthors();
         String separatedAuthorIndexes = ioService.readStringWithPrompts(
                 String.format("Select authors (comma separated), press enter to use old values: (%s)",
                         formatAuthorsBody(currentAuthors)),
                 formatAuthorsSelectionBody(availableAuthors));
         List<Author> newAuthors = separatedAuthorIndexes.isEmpty() ? currentAuthors :
                 getSelectedValues(separatedAuthorIndexes, availableAuthors);
-        List<Genre> availableGenres = genreRepository.findAll();
+        List<Genre> availableGenres = bookService.getGenres();
         String separatedGenreIndexes = ioService.readStringWithPrompts(
                 String.format("Select genres (comma separated), press enter to use old values: (%s)",
                         formatGenresBody(currentGenres)),
                 formatGenresSelectionBody(availableGenres));
         List<Genre> newGenres = separatedGenreIndexes.isEmpty() ? currentGenres :
                 getSelectedValues(separatedGenreIndexes, availableGenres);
-        List<Description> availableDescriptions = descriptionRepository.findAll();
-        String descriptionIndex = ioService.readStringWithPrompts(
-                String.format("Select description, press enter to use old value: (%s)",
-                        currentDescription.getDescription()),
-                formatDescriptionSelectionBody(availableDescriptions));
-        Description newDescription = descriptionIndex.isEmpty() ? currentDescription :
-                getSelectedValue(descriptionIndex, availableDescriptions);
+        String separatedCommentIndexes = ioService.readStringWithPrompts(
+                "Select comments to delete (comma separated), press enter to skip deleting:",
+                formatCommentsSelectionBody(currentComments));
+        if (!separatedCommentIndexes.isEmpty()) {
+            deleteSelectedValues(separatedCommentIndexes, currentComments);
+        }
+
+        String comment = ioService.readStringWithPrompts("Add comment (press enter to skip):");
+        if (!comment.isEmpty()) {
+            currentComments.add(new Comment(comment));
+        }
         book.setName(newName);
         book.setAuthors(newAuthors);
         book.setGenres(newGenres);
-        book.setDescription(newDescription);
-        bookRepository.save(book);
+        bookService.updateBook(book);
     }
 
-    @Override
     @Transactional
+    @Override
     public void processDelete() {
         ioService.printString("Select book numbers to delete (comma separated):");
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookService.getBooks();
         Arrays.stream(ioService
                         .readStringWithPrompts(formatBooksBody(books))
                         .split(","))
                 .map(number -> Integer.parseInt(number) - 1)
                 .map(index -> userInputValidator.validateInputIndex(index, books))
                 .map(books::get)
-                .forEach(bookRepository::delete);
+                .forEach(bookService::deleteBook);
     }
 
     @Transactional(readOnly = true)
     @Override
     public void processShowAll() {
-        ioService.printString(formatBooksBody(bookRepository.findAll()));
+        ioService.printString(formatBooksBody(bookService.getBooks()));
     }
 
     @Override
@@ -119,7 +115,7 @@ public class BookActionConsoleProcessor implements BookActionProcessor {
         this.ioService = ioService;
     }
 
-    private <T extends Entity> List<T> getSelectedValues(String separatedSelectedIndexes, List<T> availableValues) {
+    private <T> List<T> getSelectedValues(String separatedSelectedIndexes, List<T> availableValues) {
         return Arrays.stream(separatedSelectedIndexes.split(","))
                 .map(Integer::parseInt)
                 .map(index -> userInputValidator.validateInputIndex(index, availableValues))
@@ -127,8 +123,12 @@ public class BookActionConsoleProcessor implements BookActionProcessor {
                 .collect(Collectors.toList());
     }
 
-    private <T extends Entity> T getSelectedValue(String selectedIndex, List<T> availableValues) {
-        return availableValues.get(Integer.parseInt(selectedIndex));
+    private <T> void deleteSelectedValues(String separatedSelectedIndexes, List<T> currentValues) {
+        List<T> valuesToRemove = Arrays.stream(separatedSelectedIndexes.split(","))
+                .map(Integer::parseInt)
+                .map(currentValues::get)
+                .collect(Collectors.toList());
+        currentValues.removeAll(valuesToRemove);
     }
 
     private String formatAuthorsSelectionBody(List<Author> availableAuthors) {
@@ -155,11 +155,11 @@ public class BookActionConsoleProcessor implements BookActionProcessor {
                 .collect(Collectors.joining("; "));
     }
 
-    private String formatDescriptionSelectionBody(List<Description> availableDescriptions) {
-        return IntStream.range(0, availableDescriptions.size())
+    private String formatCommentsSelectionBody(List<Comment> currentComments) {
+        return IntStream.range(0, currentComments.size())
                 .mapToObj(i -> String.format("%d - %s",
                         i,
-                        availableDescriptions.get(i).getDescription()))
+                        currentComments.get(i).getComment()))
                 .collect(Collectors.joining("; "));
     }
 
@@ -179,9 +179,11 @@ public class BookActionConsoleProcessor implements BookActionProcessor {
                     String genres = book.getGenres().stream()
                             .map(Genre::getName)
                             .collect(Collectors.joining("; "));
-                    String description = book.getDescription().getDescription();
-                    return String.format("--- Book # %d ---\n Name: %s\n Authors: %s\n Genres: %s\n Description: %s",
-                            i + 1, book.getName(), authors, genres, description);
+                    String comments = book.getComments().stream()
+                            .map(Comment::getComment)
+                            .collect(Collectors.joining("; "));
+                    return String.format("--- Book # %d ---\n Name: %s\n Authors: %s\n Genres: %s\n Comments: %s",
+                            i + 1, book.getName(), authors, genres, comments);
                 }).collect(Collectors.joining("\n"));
     }
 }

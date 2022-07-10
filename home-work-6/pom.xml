@@ -12,7 +12,7 @@
     <artifactId>home-work-6</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>home-work-6</name>
-    <description>home-work-6</description>
+    <comment>home-work-6</comment>
     <properties>
         <java.version>11</java.version>
     </properties>
