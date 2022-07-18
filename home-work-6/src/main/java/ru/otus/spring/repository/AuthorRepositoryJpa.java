@@ -2,7 +2,6 @@ package ru.otus.spring.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import ru.otus.spring.model.Author;
 
 import javax.persistence.EntityManager;
@@ -29,6 +28,7 @@ public class AuthorRepositoryJpa implements AuthorRepository {
 
     @Override
     public void delete(Author author) {
+        author = entityManager.contains(author) ? author : entityManager.merge(author);
         entityManager.remove(author);
     }
 

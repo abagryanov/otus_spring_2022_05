@@ -1,16 +1,30 @@
 package ru.otus.spring.service;
 
-import ru.otus.spring.model.Author;
-import ru.otus.spring.model.Book;
-import ru.otus.spring.model.Genre;
+import ru.otus.spring.dto.AuthorDto;
+import ru.otus.spring.dto.BookDto;
+import ru.otus.spring.dto.CommentDto;
+import ru.otus.spring.dto.GenreDto;
 
 import java.util.List;
 
 public interface BookService {
-    void createBook(Book book);
-    void updateBook(Book book);
-    void deleteBook(Book book);
-    List<Book> getBooks();
-    List<Author> getAuthors();
-    List<Genre> getGenres();
+    BookDto findBookById(long id);
+
+    void createBook(BookDto bookDto);
+
+    void updateBook(BookDto bookDto);
+
+    void deleteBook(BookDto bookDto);
+
+    List<BookDto> getBooksDto();
+
+    List<AuthorDto> getAuthorsDto();
+
+    List<GenreDto> getGenresDto();
+
+    List<CommentDto> getBookCommentsDto(BookDto bookDto);
+
+    void createComment(CommentDto commentDto);
+
+    void deleteComment(CommentDto commentDto);
 }

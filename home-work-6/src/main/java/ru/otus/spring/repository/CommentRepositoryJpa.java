@@ -2,23 +2,32 @@ package ru.otus.spring.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
+import ru.otus.spring.model.Book;
 import ru.otus.spring.model.Comment;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class CommentRepositoryJpa implements CommentRepository {
-    @PersistenceContext
+    @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private final EntityManager entityManager;
 
     @Override
     public List<Comment> findAll() {
-        var query = entityManager.createQuery("select d from Comment d", Comment.class);
+        var query = entityManager.createQuery("select c from Comment c", Comment.class);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Comment> findAllByBook(Book book) {
+        var query = entityManager.createQuery("select c from Comment c where c.book = :book",
+                Comment.class);
+        query.setParameter("book", book);
         return query.getResultList();
     }
 
@@ -29,6 +38,7 @@ public class CommentRepositoryJpa implements CommentRepository {
 
     @Override
     public void delete(Comment comment) {
+        comment = entityManager.contains(comment) ? comment : entityManager.merge(comment);
         entityManager.remove(comment);
     }
 

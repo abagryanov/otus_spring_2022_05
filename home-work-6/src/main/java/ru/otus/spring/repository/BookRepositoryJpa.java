@@ -2,7 +2,6 @@ package ru.otus.spring.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import ru.otus.spring.model.Book;
 
 import javax.persistence.EntityGraph;
@@ -33,6 +32,7 @@ public class BookRepositoryJpa implements BookRepository {
 
     @Override
     public void delete(Book book) {
+        book = entityManager.contains(book) ? book : entityManager.merge(book);
         entityManager.remove(book);
     }
 

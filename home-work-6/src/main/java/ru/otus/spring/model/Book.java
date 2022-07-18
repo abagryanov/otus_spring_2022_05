@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "book")
 @NamedEntityGraph(name = "book-entity-graph",
-        attributeNodes = {@NamedAttributeNode("comments")})
+        attributeNodes = {@NamedAttributeNode("authors")})
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -29,7 +29,7 @@ public class Book {
 
     @Fetch(FetchMode.SELECT)
     @BatchSize(size = 5)
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "book_author",
             joinColumns = {@JoinColumn(name = "book_id")},
             inverseJoinColumns = {@JoinColumn(name = "author_id")})
@@ -37,35 +37,25 @@ public class Book {
 
     @Fetch(FetchMode.SELECT)
     @BatchSize(size = 5)
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "book_genre",
             joinColumns = {@JoinColumn(name = "book_id")},
             inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     private List<Genre> genres = new ArrayList<>();
 
-    @Fetch(FetchMode.SELECT)
-    @BatchSize(size = 5)
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
-            orphanRemoval = true)
-    @JoinColumn(name = "book_id")
-    private List<Comment> comments;
-
     public Book(String name,
                 List<Author> authors,
-                List<Genre> genres,
-                List<Comment> comments) {
+                List<Genre> genres) {
         this.name = name;
         this.authors = authors;
         this.genres = genres;
-        this.comments = comments;
-    }
-
-    public Book(String name, List<Comment> comments) {
-        this.name = name;
-        this.comments = comments;
     }
 
     public Book(String name) {
         this.name = name;
+    }
+
+    public Book(long id) {
+        this.id = id;
     }
 }

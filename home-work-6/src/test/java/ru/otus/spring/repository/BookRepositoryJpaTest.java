@@ -7,9 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.spring.model.Book;
-import ru.otus.spring.model.Comment;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +20,7 @@ public class BookRepositoryJpaTest {
     private static final int EXISTING_BOOK_ID = 1;
     private static final String EXISTING_BOOK_NAME = "White book";
 
-    private static final int EXISTING_BOOK_COMMENTS_SIZE = 2;
-    private static final int EXPECTED_QUERIES_COUNT = 3;
+    private static final int EXPECTED_QUERIES_COUNT = 2;
 
     @Autowired
     private BookRepositoryJpa bookRepositoryJpa;
@@ -39,14 +36,12 @@ public class BookRepositoryJpaTest {
         Book actualBook = actualBookOptional.get();
         assertThat(actualBook.getAuthors().size()).isEqualTo(2);
         assertThat(actualBook.getGenres().size()).isEqualTo(2);
-        assertThat(actualBook.getComments().size()).isEqualTo(EXISTING_BOOK_COMMENTS_SIZE);
         assertThat(actualBook.getName()).isEqualTo(EXISTING_BOOK_NAME);
     }
 
     @Test
     void shouldSaveBook() {
-        Book expectedBook = new Book("Bible",
-                Collections.singletonList(new Comment("sdfsdfds")));
+        Book expectedBook = new Book("Bible");
         expectedBook = bookRepositoryJpa.save(expectedBook);
         testEntityManager.flush();
         Optional<Book> actualBookOptional = bookRepositoryJpa.findById(expectedBook.getId());
@@ -86,7 +81,6 @@ public class BookRepositoryJpaTest {
         currentBooks.forEach(book -> {
             assertThat(book.getAuthors().size()).isNotNull();
             assertThat(book.getGenres().size()).isNotNull();
-            assertThat(book.getComments().size()).isNotNull();
         });
         assertThat(sessionFactory.getStatistics().getPrepareStatementCount())
                 .isEqualTo(EXPECTED_QUERIES_COUNT);
