@@ -8,6 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import ru.otus.spring.dto.AuthorDto;
 import ru.otus.spring.dto.BookDto;
+import ru.otus.spring.dto.CommentDto;
 import ru.otus.spring.dto.GenreDto;
 import ru.otus.spring.service.BookService;
 import ru.otus.spring.service.io.IoService;
@@ -39,8 +40,12 @@ public class BookActionConsoleProcessorTest {
             new GenreDto(1, "Genre 1"),
             new GenreDto(2, "Genre 2"));
 
+    private static final List<CommentDto> AVAILABLE_COMMENTS = List.of(
+            new CommentDto(1, "Book about world and war"),
+            new CommentDto(2, "Book about love"));
+
     private static final List<BookDto> AVAILABLE_BOOKS = Collections.singletonList(
-            new BookDto(1, "Test Book", AVAILABLE_AUTHORS, AVAILABLE_GENRES));
+            new BookDto(1, "Test Book", AVAILABLE_AUTHORS, AVAILABLE_GENRES, AVAILABLE_COMMENTS));
 
     @BeforeEach
     void setUp() {

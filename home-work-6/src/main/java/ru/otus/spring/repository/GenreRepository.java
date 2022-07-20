@@ -2,5 +2,12 @@ package ru.otus.spring.repository;
 
 import ru.otus.spring.model.Genre;
 
-public interface GenreRepository extends EntityRepository<Genre> {
+import java.util.List;
+import java.util.Optional;
+
+public interface GenreRepository {
+    List<Genre> findAll();
+    Optional<Genre> findById(long id);
+    void delete(Genre genre);
+    Genre save(Genre genre);
 }

@@ -36,7 +36,8 @@ public class ConverterImpl implements Converter {
                 bookDto.getId(),
                 bookDto.getName(),
                 toAuthors(bookDto.getAuthors()),
-                toGenres(bookDto.getGenres()));
+                toGenres(bookDto.getGenres()),
+                toComments(bookDto.getComments()));
     }
 
     @Override
@@ -45,7 +46,8 @@ public class ConverterImpl implements Converter {
                 book.getId(),
                 book.getName(),
                 toAuthorsDto(book.getAuthors()),
-                toGenresDto(book.getGenres()));
+                toGenresDto(book.getGenres()),
+                toCommentsDto(book.getComments()));
     }
 
     @Override
@@ -87,12 +89,18 @@ public class ConverterImpl implements Converter {
     }
 
     @Override
+    public List<Comment> toComments(Collection<CommentDto> commentsDto) {
+        return commentsDto.stream()
+                .map(this::toComment)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<CommentDto> toCommentsDto(Collection<Comment> comments) {
         return comments.stream()
                 .map(comment -> new CommentDto(
                         comment.getId(),
-                        comment.getComment(),
-                        toBookDto(comment.getBook())))
+                        comment.getComment()))
                 .collect(Collectors.toList());
     }
 
@@ -100,7 +108,6 @@ public class ConverterImpl implements Converter {
     public Comment toComment(CommentDto commentDto) {
         return new Comment(
                 commentDto.getId(),
-                commentDto.getComment(),
-                toBook(commentDto.getBook()));
+                commentDto.getComment());
     }
 }

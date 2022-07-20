@@ -75,7 +75,7 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     @Override
     public List<CommentDto> getBookCommentsDto(BookDto bookDto) {
-        return converter.toCommentsDto(commentRepository.findAllByBook(converter.toBook(bookDto)));
+        return bookDto.getComments();
     }
 
     @Transactional

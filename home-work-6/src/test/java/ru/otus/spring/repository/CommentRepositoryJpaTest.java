@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import ru.otus.spring.model.Book;
 import ru.otus.spring.model.Comment;
 
 import java.util.List;
@@ -22,10 +21,6 @@ public class CommentRepositoryJpaTest {
 
     private static final int EXISTING_COMMENT_ID = 1;
 
-    private static final int EXISTING_BOOK_ID = 1;
-
-    private static final int EXPECTED_COMMENTS_COUNT_FOR_EXISTING_BOOK = 2;
-
     private static final String EXISTING_COMMENT = "Book about world and war";
 
     @Test
@@ -38,8 +33,7 @@ public class CommentRepositoryJpaTest {
 
     @Test
     void shouldSaveComment() {
-        Comment expectedComment = new Comment(0, "Description 1",
-                new Book(EXISTING_BOOK_ID));
+        Comment expectedComment = new Comment(0, "Description 1");
         expectedComment = commentRepositoryJpa.save(expectedComment);
         Optional<Comment> actualDescriptionOptional = commentRepositoryJpa.findById(expectedComment.getId());
         assertThat(actualDescriptionOptional).isPresent().get()
@@ -48,8 +42,7 @@ public class CommentRepositoryJpaTest {
 
     @Test
     void shouldUpdateComment() {
-        Comment expectedComment = new Comment(0, "Description 1",
-                new Book(EXISTING_BOOK_ID));
+        Comment expectedComment = new Comment(0, "Description 1");
         expectedComment = commentRepositoryJpa.save(expectedComment);
         expectedComment.setComment("Description 2");
         commentRepositoryJpa.save(expectedComment);
@@ -70,11 +63,5 @@ public class CommentRepositoryJpaTest {
     void shouldReturnExpectedAllComments() {
         List<Comment> currentComments = commentRepositoryJpa.findAll();
         assertThat(currentComments.size()).isEqualTo(EXPECTED_COMMENTS_COUNT);
-    }
-
-    @Test
-    void shouldReturnExpectedCommentsForBook() {
-        List<Comment> currentComments = commentRepositoryJpa.findAllByBook(new Book(EXISTING_BOOK_ID));
-        assertThat(currentComments.size()).isEqualTo(EXPECTED_COMMENTS_COUNT_FOR_EXISTING_BOOK);
     }
 }

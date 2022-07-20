@@ -2,7 +2,7 @@ package ru.otus.spring.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.otus.spring.model.Book;
+
 import ru.otus.spring.model.Comment;
 
 import javax.persistence.EntityManager;
@@ -20,14 +20,6 @@ public class CommentRepositoryJpa implements CommentRepository {
     @Override
     public List<Comment> findAll() {
         var query = entityManager.createQuery("select c from Comment c", Comment.class);
-        return query.getResultList();
-    }
-
-    @Override
-    public List<Comment> findAllByBook(Book book) {
-        var query = entityManager.createQuery("select c from Comment c where c.book = :book",
-                Comment.class);
-        query.setParameter("book", book);
         return query.getResultList();
     }
 

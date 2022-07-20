@@ -20,7 +20,7 @@ public class BookRepositoryJpaTest {
     private static final int EXISTING_BOOK_ID = 1;
     private static final String EXISTING_BOOK_NAME = "White book";
 
-    private static final int EXPECTED_QUERIES_COUNT = 2;
+    private static final int EXPECTED_QUERIES_COUNT = 3;
 
     @Autowired
     private BookRepositoryJpa bookRepositoryJpa;

@@ -10,10 +10,8 @@ import lombok.NoArgsConstructor;
 public class CommentDto {
     private long id;
     private String comment;
-    private BookDto book;
 
-    public CommentDto(String comment, BookDto book) {
+    public CommentDto(String comment) {
         this.comment = comment;
-        this.book = book;
     }
 }

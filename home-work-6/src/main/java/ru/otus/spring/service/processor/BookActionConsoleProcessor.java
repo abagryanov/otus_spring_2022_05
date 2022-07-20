@@ -90,7 +90,9 @@ public class BookActionConsoleProcessor implements BookActionProcessor {
     public void processAddComment(long bookId) {
         BookDto book = bookService.findBookById(bookId);
         String newComment = ioService.readStringWithPrompts("Enter new comment:");
-        bookService.createComment(new CommentDto(newComment, book));
+        List<CommentDto> comments = book.getComments();
+        comments.add(new CommentDto(newComment));
+        bookService.updateBook(book);
     }
 
     @Override

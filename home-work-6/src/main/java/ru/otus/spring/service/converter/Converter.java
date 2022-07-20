@@ -29,6 +29,8 @@ public interface Converter {
 
     List<Genre> toGenres(Collection<GenreDto> genresDto);
 
+    List<Comment> toComments(Collection<CommentDto> commentsDto);
+
     Comment toComment(CommentDto commentDto);
 
     List<CommentDto> toCommentsDto(Collection<Comment> comments);

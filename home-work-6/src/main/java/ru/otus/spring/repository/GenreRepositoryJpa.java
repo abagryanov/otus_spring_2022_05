@@ -6,7 +6,7 @@ import ru.otus.spring.model.Genre;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
+
 import java.util.List;
 import java.util.Optional;
 

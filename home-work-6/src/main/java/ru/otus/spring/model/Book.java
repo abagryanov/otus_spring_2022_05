@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "book")
 @NamedEntityGraph(name = "book-entity-graph",
-        attributeNodes = {@NamedAttributeNode("authors")})
+        attributeNodes = {@NamedAttributeNode("comments")})
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -42,6 +42,12 @@ public class Book {
             joinColumns = {@JoinColumn(name = "book_id")},
             inverseJoinColumns = {@JoinColumn(name = "genre_id")})
     private List<Genre> genres = new ArrayList<>();
+
+    @Fetch(FetchMode.SELECT)
+    @BatchSize(size = 5)
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @JoinColumn(name = "book_id")
+    private List<Comment> comments = new ArrayList<>();
 
     public Book(String name,
                 List<Author> authors,
