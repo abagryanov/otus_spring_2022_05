@@ -29,26 +29,23 @@ public class BookServiceImpl implements BookService {
 
     private final Converter converter;
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public BookDto findBookById(long id) {
         return converter.toBookDto(bookRepository.findById(id).orElse(new Book()));
     }
 
-    @Transactional
     @Override
     public void createBook(BookDto bookDto) {
         bookRepository.save(
                 converter.toBook(bookDto));
     }
 
-    @Transactional
     @Override
     public void updateBook(BookDto bookDto) {
         bookRepository.save(converter.toBook(bookDto));
     }
 
-    @Transactional
     @Override
     public void deleteBook(BookDto bookDto) {
         bookRepository.delete(converter.toBook(bookDto));
@@ -60,31 +57,26 @@ public class BookServiceImpl implements BookService {
         return converter.toBooksDto(bookRepository.findAll());
     }
 
-    @Transactional(readOnly = true)
     @Override
     public List<AuthorDto> getAuthorsDto() {
         return converter.toAuthorsDto(authorRepository.findAll());
     }
 
-    @Transactional(readOnly = true)
     @Override
     public List<GenreDto> getGenresDto() {
         return converter.toGenresDto(genreRepository.findAll());
     }
 
-    @Transactional(readOnly = true)
     @Override
     public List<CommentDto> getBookCommentsDto(BookDto bookDto) {
         return bookDto.getComments();
     }
 
-    @Transactional
     @Override
     public void createComment(CommentDto commentDto) {
         commentRepository.save(converter.toComment(commentDto));
     }
 
-    @Transactional
     @Override
     public void deleteComment(CommentDto commentDto) {
         commentRepository.delete(converter.toComment(commentDto));
