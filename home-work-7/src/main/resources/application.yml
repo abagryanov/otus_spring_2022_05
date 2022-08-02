@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+  h2:
+    console:
+      path: /h2-console
+      settings:
+        web-allow-others: true
+      enabled: true
+  flyway:
+    enabled: true
+  shell:
+    interactive:
+      enabled: true
+  main:
+    allow-circular-references: true
