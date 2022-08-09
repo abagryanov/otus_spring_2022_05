@@ -29,13 +29,13 @@ public class BookRepositoryTest {
 
     @Test
     public void shouldReturnAllBooks() {
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookRepository.findAllWithoutComments();
         assertThat(books.size()).isEqualTo(EXPECTED_BOOKS_COUNT);
     }
 
     @Test
     public void shouldReturnBookByName() {
-        List<Book> books = bookRepository.findByName(EXPECTED_FIRST_BOOK_NAME);
+        List<Book> books = bookRepository.findByNameWithoutComments(EXPECTED_FIRST_BOOK_NAME);
         assertThat(books.size()).isEqualTo(1);
         Book book = books.get(0);
         assertThat(book.getName()).isEqualTo(EXPECTED_FIRST_BOOK_NAME);
@@ -45,23 +45,23 @@ public class BookRepositoryTest {
     public void shouldSaveBook() {
         Book newBook = new Book("New Book", Collections.emptyList(), Collections.emptyList());
         bookRepository.save(newBook);
-        List<Book> actualBooks = bookRepository.findByName("New Book");
+        List<Book> actualBooks = bookRepository.findByNameWithoutComments("New Book");
         assertThat(actualBooks.size()).isEqualTo(1);
     }
 
     @Test
     public void shouldDeleteBook() {
-        List<Book> actualBooks = bookRepository.findByName(EXPECTED_FIRST_BOOK_NAME);
+        List<Book> actualBooks = bookRepository.findByNameWithoutComments(EXPECTED_FIRST_BOOK_NAME);
         assertThat(actualBooks.size()).isEqualTo(1);
         Book bookToDelete = actualBooks.get(0);
         bookRepository.delete(bookToDelete);
-        List<Book> expectedBooksAfterDelete = bookRepository.findByName(EXPECTED_FIRST_BOOK_NAME);
+        List<Book> expectedBooksAfterDelete = bookRepository.findByNameWithoutComments(EXPECTED_FIRST_BOOK_NAME);
         assertThat(expectedBooksAfterDelete.size()).isEqualTo(0);
     }
 
     @Test
     public void shouldGetComments() {
-        List<Book> actualBooks = bookRepository.findByName(EXPECTED_SECOND_BOOK_NAME);
+        List<Book> actualBooks = bookRepository.findByNameWithoutComments(EXPECTED_SECOND_BOOK_NAME);
         assertThat(actualBooks.size()).isEqualTo(1);
         Book actualBook = actualBooks.get(0);
         List<Comment> actualComments = bookRepository.getComments(actualBook);
@@ -72,7 +72,7 @@ public class BookRepositoryTest {
     public void shouldAddComment() {
         String newCommentText = "New comment";
         Comment newComment = new Comment(newCommentText);
-        List<Book> actualBooks = bookRepository.findByName(EXPECTED_SECOND_BOOK_NAME);
+        List<Book> actualBooks = bookRepository.findByNameWithoutComments(EXPECTED_SECOND_BOOK_NAME);
         assertThat(actualBooks.size()).isEqualTo(1);
         Book actualBook = actualBooks.get(0);
         bookRepository.addComment(actualBook, newComment);
@@ -85,7 +85,7 @@ public class BookRepositoryTest {
 
     @Test
     public void shouldDeleteComment() {
-        List<Book> actualBooks = bookRepository.findByName(EXPECTED_SECOND_BOOK_NAME);
+        List<Book> actualBooks = bookRepository.findByNameWithoutComments(EXPECTED_SECOND_BOOK_NAME);
         assertThat(actualBooks.size()).isEqualTo(1);
         Book actualBook = actualBooks.get(0);
         List<Comment> actualComments = bookRepository.getComments(actualBook);

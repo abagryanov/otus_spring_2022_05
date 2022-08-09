@@ -7,9 +7,9 @@ spring:
       host: localhost
       port: 27017
       database: library
-#      username: user
-#      password: user123
-#      authentication-database: admin
+      username: user
+      password: user123
+      authentication-database: admin
   shell:
     interactive:
       enabled: true

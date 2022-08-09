@@ -24,7 +24,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book findBookById(String id) {
-        return bookRepository.findById(id).orElse(new Book());
+        return bookRepository.findByIdWithoutComments(id).orElse(new Book());
     }
 
     @Override
@@ -44,7 +44,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> getBooks() {
-        return bookRepository.findAll();
+        return bookRepository.findAllWithoutComments();
     }
 
     @Override

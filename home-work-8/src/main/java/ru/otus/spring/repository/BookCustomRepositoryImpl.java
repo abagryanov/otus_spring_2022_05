@@ -20,7 +20,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
 
 @RequiredArgsConstructor
-public class BookCommentsCustomRepositoryImpl implements BookCommentsCustomRepository {
+public class BookCustomRepositoryImpl implements BookCustomRepository {
     private final MongoOperations mongoTemplate;
 
     private MongoCollection<Document> bookCollection;
@@ -47,7 +47,9 @@ public class BookCommentsCustomRepositoryImpl implements BookCommentsCustomRepos
         Aggregation aggregation = Aggregation.newAggregation(
                 match(Criteria.where("id").is(book.getId()))
                 , unwind("comments")
-                , project().andExclude("_id").and("comments.id").as("_id").and("comments.text").as("text")
+                , project().andExclude("_id")
+                        .and("comments.id").as("_id")
+                        .and("comments.text").as("text")
         );
         return mongoTemplate.aggregate(aggregation, Book.class, Comment.class).getMappedResults();
     }
