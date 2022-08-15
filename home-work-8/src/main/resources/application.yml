@@ -1,0 +1,27 @@
+spring:
+  mongodb:
+    embedded:
+      version: 3.5.5
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: library
+      username: user
+      password: user123
+      authentication-database: admin
+  shell:
+    interactive:
+      enabled: true
+  main:
+    allow-circular-references: true
+
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.spring.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+
