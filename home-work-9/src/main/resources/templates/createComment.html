@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Create comment</title>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body class="container">
+<h1>Create comment</h1>
+
+<form class="col card p-3 my-5" method="post" th:action="@{'/comments/create/' + ${bookId}}">
+    <div class="form-group">
+        <label for="comment">Comment</label>
+        <input class="form-control" id="comment" name="comment" placeholder="Enter Comment" required autocomplete="off"
+               type="text"/>
+    </div>
+    <div>
+        <input class="btn btn-primary" type="submit" value="Create comment">
+        <a class="btn btn-danger" th:href="'/comments/' + ${bookId}">Cancel</a>
+    </div>
+</form>
+
+</body>
+</html>
