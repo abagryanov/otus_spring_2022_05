@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Edit book</title>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
+          rel="stylesheet">
+
+</head>
+<body class="container">
+<h1 th:text="'Edit book # ' + ${book.id}">
+    Edit book
+</h1>
+
+<form class="col card p-3 my-5" method="post" th:action="@{/edit}" th:object="${book}">
+    <div class="form-group">
+        <input class="form-control" id="id"
+               th:field="*{id}"
+               type="text"
+               readonly
+               hidden/>
+    </div>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input class="form-control" id="name" name="name" placeholder="Enter Name" required autocomplete="off"
+               th:field="*{name}"
+               type="text"/>
+    </div>
+    <div class="form-group">
+        <label for="authors">Authors</label>
+        <select multiple class="form-control " id="authors" name="authors" required
+                th:with="selectedAuthors=*{authors.![id]}">
+            <option
+                    th:each="author : ${availableAuthors}"
+                    th:text="${author.firstName} + ' ' + ${author.lastName}"
+                    th:value="${author.id}"
+                    th:selected="${#lists.contains(selectedAuthors, author.id)}">
+            </option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="genres">Genres</label>
+        <select multiple class="form-control " id="genres" name="genres" required
+                th:with="selectedGenres=*{genres.![id]}">
+            <option
+                    th:each="genre : ${availableGenres}"
+                    th:text="${genre.name}"
+                    th:value="${genre.id}"
+                    th:selected="${#lists.contains(selectedGenres, genre.id)}">
+            </option>
+        </select>
+    </div>
+    <div>
+        <input class="btn btn-primary" type="submit" value="Update book">
+        <a class="btn btn-danger" th:href="'/'">Cancel</a>
+    </div>
+</form>
+
+</body>
+</html>

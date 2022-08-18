@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Create book</title>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body class="container">
+<h1>Create book</h1>
+
+<form class="col card p-3 my-5" method="post" th:action="@{/create}">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input class="form-control" id="name" name="name" placeholder="Enter Name" required autocomplete="off"
+               type="text"/>
+    </div>
+    <div class="form-group">
+        <label for="authors">Authors</label>
+        <select multiple class="form-control " id="authors" name="authors" required>
+            <option
+                    th:each="author : ${availableAuthors}"
+                    th:text="${author.firstName} + ' ' + ${author.lastName}"
+                    th:value="${author.id}">
+            </option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="genres">Genres</label>
+        <select multiple class="form-control " id="genres" name="genres" required>
+            <option
+                    th:each="genre : ${availableGenres}"
+                    th:text="${genre.name}"
+                    th:value="${genre.id}">
+            </option>
+        </select>
+    </div>
+    <div>
+        <input class="btn btn-primary" type="submit" value="Create book">
+        <a class="btn btn-danger" th:href="'/'">Cancel</a>
+    </div>
+</form>
+
+</body>
+</html>
