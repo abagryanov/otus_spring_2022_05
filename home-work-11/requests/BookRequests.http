@@ -1,0 +1,28 @@
+GET localhost:8080/api/books
+
+###
+
+GET localhost:8080/api/books/63121a57074f954d4936c508
+
+###
+
+POST localhost:8080/api/books
+Content-Type: application/json
+
+{
+  "name": "newBook22",
+  "authors": [
+    "631215314389ec2c3e9c63f0",
+    "631215314389ec2c3e9c63f1"
+  ],
+  "genres": [
+    "631216278c3dbe17da4523b2",
+    "631216278c3dbe17da4523b3"
+  ]
+}
+
+###
+
+GET localhost:8080/api/books/63127cad6b8be4117007e118/comments
+
+###
