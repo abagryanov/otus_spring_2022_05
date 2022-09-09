@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,6 +16,7 @@ import ru.otus.spring.dto.CommentDto;
 import ru.otus.spring.dto.GenreDto;
 import ru.otus.spring.rest.controller.BookController;
 import ru.otus.spring.rest.dto.BookUpdateRequestDto;
+import ru.otus.spring.security.SecurityConfiguration;
 import ru.otus.spring.service.BookService;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BookController.class)
+@Import(SecurityConfiguration.class)
 public class BookControllerTest {
     List<AuthorDto> EXPECTED_AUTHORS = List.of(
             new AuthorDto(1, "John1", "Doe1"),
@@ -58,11 +61,11 @@ public class BookControllerTest {
     private BookService bookService;
 
     @Test
-    void whenDoGetAllBooksRequestNotAuth_thenResponseIsUnauthorized() throws Exception {
+    void whenDoGetAllBooksRequestNotAuth_thenResponseIsFound() throws Exception {
         when(bookService.getBooksDto()).thenReturn(EXPECTED_BOOKS);
         mvc.perform(
                         get("/api/books"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isFound());
     }
 
     @WithMockUser(
@@ -77,11 +80,11 @@ public class BookControllerTest {
                 .andExpect(status().isOk());
     }
 
-
-    void whenDoDeleteBookNotAuth_thenResponseIsUnauthorized() throws Exception {
+    @Test
+    void whenDoDeleteBookNotAuth_thenResponseIsFound() throws Exception {
         mvc.perform(
                         delete("/api/books/1"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isFound());
     }
 
     @WithMockUser(
@@ -115,7 +118,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void whenDoCreateBookNotAuth_thenResponseIsUnauthorized() throws Exception {
+    void whenDoCreateBookNotAuth_thenResponseIsFound() throws Exception {
         BookUpdateRequestDto bookUpdateRequestDto = new BookUpdateRequestDto(
                 1,
                 "newName",
@@ -126,7 +129,7 @@ public class BookControllerTest {
                                 .contentType("application/json")
                                 .characterEncoding("utf-8")
                                 .content(objectMapper.writeValueAsString(bookUpdateRequestDto)))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isFound());
     }
 
     @WithMockUser(
@@ -145,6 +148,6 @@ public class BookControllerTest {
                                 .contentType("application/json")
                                 .characterEncoding("utf-8")
                                 .content(objectMapper.writeValueAsString(bookUpdateRequestDto)))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isOk());
     }
 }

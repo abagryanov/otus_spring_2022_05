@@ -4,10 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.spring.dto.AuthorDto;
 import ru.otus.spring.rest.controller.AuthorController;
+import ru.otus.spring.security.SecurityConfiguration;
 import ru.otus.spring.service.BookService;
 
 import java.util.List;
@@ -17,6 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AuthorController.class)
+@Import(SecurityConfiguration.class)
 public class AuthorControllerTest {
     List<AuthorDto> EXPECTED_AUTHORS = List.of(
             new AuthorDto(1, "John1", "Doe1"),
@@ -31,13 +34,13 @@ public class AuthorControllerTest {
     private BookService bookService;
 
     @Test
-    void whenDoGetAuthorsNotAuth_thenResponseIsUnauthorized() throws Exception {
+    void whenDoGetAuthorsNotAuth_thenResponseIsFound() throws Exception {
         when(bookService.getAuthorsDto()).thenReturn(EXPECTED_AUTHORS);
         mvc.perform(
                         get("/api/authors")
                                 .contentType("application/json")
                                 .characterEncoding("utf-8"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isFound());
     }
 
     @WithMockUser(

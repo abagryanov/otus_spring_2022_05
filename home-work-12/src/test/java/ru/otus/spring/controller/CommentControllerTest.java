@@ -5,11 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.spring.dto.BookDto;
 import ru.otus.spring.rest.controller.CommentController;
 import ru.otus.spring.rest.dto.AddCommentRequestDto;
+import ru.otus.spring.security.SecurityConfiguration;
 import ru.otus.spring.service.BookService;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CommentController.class)
+@Import(SecurityConfiguration.class)
 public class CommentControllerTest {
 
     private static final BookDto EXPECTED_BOOK = new BookDto(1,
@@ -40,11 +43,11 @@ public class CommentControllerTest {
     private BookService bookService;
 
     @Test
-    void whenDoGetCommentsNotAuth_thenResponseIsUnauthorized() throws Exception {
+    void whenDoGetCommentsNotAuth_thenResponseIsFound() throws Exception {
         when(bookService.findBookById(anyLong())).thenReturn(EXPECTED_BOOK);
         mvc.perform(
                         get("/api/comments/1"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isFound());
     }
 
     @WithMockUser(
@@ -60,10 +63,10 @@ public class CommentControllerTest {
     }
 
     @Test
-    void whenDoDeleteCommentNotAuth_thenResponseIsUnauthorized() throws Exception {
+    void whenDoDeleteCommentNotAuth_thenResponseIsFound() throws Exception {
         mvc.perform(
                 delete("/api/comments/1"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isFound());
     }
 
     @WithMockUser(
@@ -78,7 +81,7 @@ public class CommentControllerTest {
     }
 
     @Test
-    void whenDoAddCommentNotAuth_thenResponseIsUnauthorized() throws Exception {
+    void whenDoAddCommentNotAuth_thenResponseIsFound() throws Exception {
         AddCommentRequestDto addCommentRequestDto = new AddCommentRequestDto(1, "comment");
         when(bookService.findBookById(anyLong())).thenReturn(EXPECTED_BOOK);
         mvc.perform(
@@ -86,7 +89,7 @@ public class CommentControllerTest {
                         .contentType("application/json")
                         .characterEncoding("utf-8")
                         .content(objectMapper.writeValueAsString(addCommentRequestDto)))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isFound());
     }
 
     @WithMockUser(
