@@ -51,7 +51,6 @@ public class BatchConfig {
         return bookReader;
     }
 
-    @StepScope
     @Bean
     public ItemProcessor<Book, BookDocument> bookProcessor() {
         return cachedBookConverter::convert;

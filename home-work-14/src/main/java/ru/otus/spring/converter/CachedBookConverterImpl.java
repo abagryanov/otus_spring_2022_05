@@ -12,16 +12,16 @@ import ru.otus.spring.model.sql.Book;
 import ru.otus.spring.model.sql.Comment;
 import ru.otus.spring.model.sql.Genre;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @StepScope
 @Component
 public class CachedBookConverterImpl implements CachedBookConverter {
-    private final Map<Long, AuthorDocument> AUTHORS_CONVERTER_CACHE = new HashMap<>();
-    private final Map<Long, GenreDocument> GENRES_CONVERTER_CACHE = new HashMap<>();
+    private final Map<Long, AuthorDocument> AUTHORS_CONVERTER_CACHE = new ConcurrentHashMap<>();
+    private final Map<Long, GenreDocument> GENRES_CONVERTER_CACHE = new ConcurrentHashMap<>();
 
     @Override
     public BookDocument convert(Book book) {

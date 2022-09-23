@@ -36,6 +36,8 @@ public class BookDocument {
     @DBRef
     private List<GenreDocument> genres = new ArrayList<>();
 
+    @Getter
+    @Setter
     private List<CommentDocument> comments = new ArrayList<>();
 
     public BookDocument(String name,

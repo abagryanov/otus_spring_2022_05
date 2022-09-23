@@ -14,9 +14,8 @@ import org.springframework.context.ApplicationContext;
 @SpringBootApplication
 public class HomeWork14Application {
 
-    public static void main(String[] args) throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
-        ApplicationContext context = SpringApplication.run(HomeWork14Application.class, args);
-        context.getBean(JobLauncher.class).run((Job) context.getBean("importBooksJob") , new JobParameters());
+    public static void main(String[] args) {
+        SpringApplication.run(HomeWork14Application.class, args);
     }
 
 }

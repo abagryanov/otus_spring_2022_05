@@ -35,8 +35,18 @@ public class BookWriter implements ItemWriter<BookDocument> {
                 .flatMap(book -> book.getGenres().stream())
                 .collect(Collectors.toList());
 
-        authorDocumentRepository.saveAll(authors);
-        genreDocumentRepository.saveAll(genres);
-        books.forEach(bookDocumentRepository::save);
+        authors.forEach(authorDocument -> {
+            if (!authorDocumentRepository.existsById(authorDocument.getId())) {
+                authorDocumentRepository.save(authorDocument);
+            }
+        });
+
+        genres.forEach(genreDocument -> {
+            if (!genreDocumentRepository.existsById(genreDocument.getId())) {
+                genreDocumentRepository.save(genreDocument);
+            }
+        });
+
+        bookDocumentRepository.saveAll(books);
     }
 }
