@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/otus
+    username: otus
+    password: otus123
+
+  flyway:
+    enabled: true
